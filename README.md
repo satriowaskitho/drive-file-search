@@ -743,8 +743,6 @@ function getFileTypeLabel(mimeType) {
 </html>
 ```
 
-> **Catatan**: File `Index.html` lengkap tersedia di repository GitHub ini
-
 ## ⚙️ Konfigurasi
 
 ### Mengubah Folder yang Dicari
@@ -756,18 +754,6 @@ const FOLDER_ID = 'ID_FOLDER_ANDA';
 ```
 
 Ganti dengan ID folder yang ingin Anda tampilkan.
-
-### Menambah Tipe File Lain
-
-Tambahkan tipe MIME di dalam array `mimeTypes`:
-
-```javascript
-const mimeTypes = [
-  // ... tipe yang sudah ada
-  MimeType.PDF,  // Untuk file PDF
-  MimeType.JPEG, // Untuk gambar JPEG
-];
-```
 
 ## 🚢 Deployment
 
@@ -875,20 +861,6 @@ drive-file-browser/
 | Tablet | 768px - 1024px | Layout sedang dengan spacing dikurangi |
 | Mobile | < 768px | Tombol stack vertikal, full width |
 | Small Mobile | < 480px | Text lebih kecil, padding minimal |
-
-## 🤝 Kontribusi
-
-Kontribusi sangat diterima! Silakan:
-
-1. Fork repository ini
-2. Buat branch baru (`git checkout -b fitur-baru`)
-3. Commit perubahan (`git commit -m 'Menambah fitur baru'`)
-4. Push ke branch (`git push origin fitur-baru`)
-5. Buat Pull Request
-
-## 📝 Lisensi
-
-Project ini dilisensikan di bawah [MIT License](LICENSE).
 
 ## 👨‍💻 Author
 
