@@ -1,4 +1,4 @@
-***
+<img width="1029" height="943" alt="image" src="https://github.com/user-attachments/assets/c56f131f-e9fb-4b99-b7d0-22039bcde9c6" /><img width="1031" height="1030" alt="image" src="https://github.com/user-attachments/assets/ee8290a2-cc69-4b10-9b97-b5350a08fe26" />***
 
 # Google Drive File Browser untuk Google Sites
 
@@ -59,12 +59,21 @@ Aplikasi web untuk menampilkan dan mencari file Google Drive (Docs, Sheets, Slid
 ### Langkah 2: Buat Google Apps Script Project
 
 1. Buka [script.google.com](https://script.google.com)
+<img width="671" height="355" alt="image" src="https://github.com/user-attachments/assets/914d0651-07a2-4eba-b293-70b728052e4c" />
+
 2. Klik **New Project** (Projek Baru)
+<img width="661" height="329" alt="image" src="https://github.com/user-attachments/assets/11576675-6088-4467-a52b-4e3ced2e5b86" />
+
 3. Ubah nama project menjadi **"Drive File Browser"**
+<img width="1018" height="520" alt="image" src="https://github.com/user-attachments/assets/d0144fbc-5cbc-406f-bee2-a18ba13feb80" />
+<img width="1025" height="749" alt="image" src="https://github.com/user-attachments/assets/ba742bf7-4ee6-4908-817b-047e175b9e72" />
+
 
 ### Langkah 3: Buat File Code.gs
 
 1. Hapus kode default yang ada
+<img width="1025" height="447" alt="image" src="https://github.com/user-attachments/assets/b84bc26a-3349-4e73-9b06-ad01b0e2a303" />
+
 2. Salin dan tempel kode berikut:
 
 ```javascript
@@ -210,15 +219,25 @@ function getFileTypeLabel(mimeType) {
   return types[mimeType] || 'Unknown';
 }
 ```
+<img width="1024" height="944" alt="image" src="https://github.com/user-attachments/assets/fafb9520-d386-45e7-abd9-f79c64356cdf" />
 
 3. **Penting**: Ganti `PASTE_FOLDER_ID_ANDA_DISINI` dengan Folder ID yang Anda salin di Langkah 1
+
 
 ### Langkah 4: Buat File Index.html
 
 1. Klik **+** di sebelah "Files"
+<img width="1019" height="558" alt="image" src="https://github.com/user-attachments/assets/741570b2-5f0e-4ea9-aa7a-b4365492b3bd" />
+
 2. Pilih **HTML**
+<img width="1023" height="593" alt="image" src="https://github.com/user-attachments/assets/9204834b-f1a7-42ed-8a61-5232816e1ea7" />
+
 3. Beri nama **Index**
-4. Salin dan tempel kode HTML di bawah:
+<img width="1025" height="522" alt="image" src="https://github.com/user-attachments/assets/bd300332-793e-4e4d-9170-ee146c52809e" />
+
+4. Pilih file **Index.html**, salin dan tempel kode HTML di bawah:
+<img width="1028" height="490" alt="image" src="https://github.com/user-attachments/assets/860eae75-3129-4a44-910e-534bba881ec2" />
+
 
 ```javascript
 <!DOCTYPE html>
@@ -742,6 +761,8 @@ function getFileTypeLabel(mimeType) {
 </body>
 </html>
 ```
+<img width="1028" height="1028" alt="image" src="https://github.com/user-attachments/assets/05a1bdbe-1df3-4d0b-8afd-0d779e88a106" />
+
 
 ## ⚙️ Konfigurasi
 
@@ -752,6 +773,8 @@ Edit file `Code.gs` pada baris:
 ```javascript
 const FOLDER_ID = 'ID_FOLDER_ANDA';
 ```
+<img width="1027" height="415" alt="image" src="https://github.com/user-attachments/assets/33b7d928-5569-4fbc-a3b0-f24412c89407" />
+
 
 Ganti dengan ID folder yang ingin Anda tampilkan.
 
@@ -760,31 +783,59 @@ Ganti dengan ID folder yang ingin Anda tampilkan.
 ### Deploy sebagai Web App
 
 1. Di Apps Script editor, klik **Deploy** > **New deployment**
+<img width="1027" height="452" alt="image" src="https://github.com/user-attachments/assets/b3ece0d8-b017-4f2d-a4ce-c1e2dcaf7c52" />
+
 2. Klik ikon ⚙️ > Pilih **Web app**
+<img width="1027" height="1031" alt="image" src="https://github.com/user-attachments/assets/f97f022d-938c-42e9-aa52-d060eed9fc7f" />
+<img width="1031" height="1030" alt="image" src="https://github.com/user-attachments/assets/510de29d-4957-4cd6-be71-c1b8d3b2cf6d" />
+
 3. Isi konfigurasi:
    - **Description**: Drive File Browser v1.0
    - **Execute as**: Me (contoh: email@gmail.com)
    - **Who has access**: Anyone (atau pilih sesuai kebutuhan)
+<img width="1029" height="1029" alt="image" src="https://github.com/user-attachments/assets/d6a48192-7bbc-4912-8094-9763845d4a82" />
+
 4. Klik **Deploy**
+<img width="1030" height="1028" alt="image" src="https://github.com/user-attachments/assets/0748dba2-71dd-443f-86c6-6b6e77119976" />
+
 5. Klik **Authorize access**
+<img width="1033" height="1030" alt="image" src="https://github.com/user-attachments/assets/979b433e-d804-49ef-a462-481e3f433fc9" />
+
 6. Pilih akun Google Anda
+<img width="656" height="796" alt="image" src="https://github.com/user-attachments/assets/c06d3116-4629-4c86-8da8-22ea2b4f18a0" />
+
 7. Klik **Advanced** > **Go to [Project Name] (unsafe)**
-8. Klik **Allow**
+<img width="660" height="800" alt="image" src="https://github.com/user-attachments/assets/ab29de12-0fbe-4ffd-af27-bfd8aea30a85" />
+<img width="663" height="804" alt="image" src="https://github.com/user-attachments/assets/e6ba2ae0-c37f-48fc-b303-aa269497dce3" />
+
+8. Klik **Continue**
+<img width="659" height="946" alt="image" src="https://github.com/user-attachments/assets/6aebdf97-03a1-48a5-bdb0-6aa98e47c407" />
+
 9. **Salin URL Web App** yang muncul
+<img width="1029" height="943" alt="image" src="https://github.com/user-attachments/assets/71ff1f36-2c77-4fcb-bf37-f90f07e5768f" />
+
 
 ### Embed di Google Sites
 
 1. Buka [sites.google.com](https://sites.google.com)
+<img width="1022" height="364" alt="image" src="https://github.com/user-attachments/assets/686079e1-371c-43c4-b31a-6c0732cded2d" />
+
 2. Pilih atau buat Google Site baru
 3. Klik **Edit** (ikon pensil)
 4. Klik di area halaman tempat Anda ingin menambahkan browser file
 5. Di panel kanan, klik **Insert** > **Embed**
-6. Pilih tab **Embed Code**
+<img width="1028" height="1028" alt="image" src="https://github.com/user-attachments/assets/bbf2a3b8-32d3-472f-9fbf-ec787460068d" />
+
+6. Pilih tab **By URL**
+<img width="1027" height="942" alt="image" src="https://github.com/user-attachments/assets/bd36e5a8-a1f5-4d53-9100-4409311ca81d" />
+
 7. **Paste URL Web App** yang Anda salin
+<img width="1026" height="941" alt="image" src="https://github.com/user-attachments/assets/a296bef2-280b-460b-94da-8b4018903f50" />
+
 8. Klik **Insert**
-9. Sesuaikan ukuran embed:
-   - Width: 100%
-   - Height: 700px (atau sesuai kebutuhan)
+9. Sesuaikan ukuran embed
+<img width="1025" height="940" alt="image" src="https://github.com/user-attachments/assets/ea7859af-1f27-40ba-9026-2a86f2491fb0" />
+
 10. Klik **Publish** untuk mempublikasikan site
 
 ## 📖 Cara Menggunakan
