@@ -1,4 +1,4 @@
-<img width="1029" height="943" alt="image" src="https://github.com/user-attachments/assets/c56f131f-e9fb-4b99-b7d0-22039bcde9c6" /><img width="1031" height="1030" alt="image" src="https://github.com/user-attachments/assets/ee8290a2-cc69-4b10-9b97-b5350a08fe26" />***
+***
 
 # Google Drive File Browser untuk Google Sites
 
