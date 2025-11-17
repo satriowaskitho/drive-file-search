@@ -2,7 +2,7 @@
 
 # Google Drive File Browser untuk Google Sites
 
-Aplikasi web untuk menampilkan dan mencari file Google Drive (Docs, Sheets, Slides) dan Microsoft Office (DOCX, XLSX, PPTX) dengan antarmuka yang responsif dan modern.
+Aplikasi web untuk menampilkan dan mencari file Google Drive (Docs, Sheets, Slides) dan Microsoft Office (DOCX, XLSX, PPTX) dengan antarmuka yang responsif dan modern, mendukung pencarian rekursif di semua subfolder..
 
 ## 📋 Daftar Isi
 
@@ -15,26 +15,30 @@ Aplikasi web untuk menampilkan dan mencari file Google Drive (Docs, Sheets, Slid
 - [Cara Menggunakan](#cara-menggunakan)
 - [Struktur File](#struktur-file)
 - [Troubleshooting](#troubleshooting)
-- [Lisensi](#lisensi)
 
 ## ✨ Fitur
 
-- 🔍 Pencarian file berdasarkan nama dan konten
-- 📄 Mendukung format Google Workspace (Docs, Sheets, Slides)
-- 💼 Mendukung format Microsoft Office (DOCX, XLSX, PPTX, DOC, XLS, PPT)
-- 📱 Desain responsif (Desktop, Tablet, Mobile)
+- 🔍 **Pencarian file** berdasarkan nama dan konten
+- 📁 **Pencarian rekursif** di semua subfolder dan nested folders
+- 📄 Mendukung format **Google Workspace** (Docs, Sheets, Slides)
+- 💼 Mendukung format **Microsoft Office** (DOCX, XLSX, PPTX, DOC, XLS, PPT)
+- 📱 **Desain responsif** (Desktop, Tablet, Mobile)
 - 🎨 Antarmuka modern dengan ikon dan badge warna
-- 📊 Menampilkan informasi file (ukuran, tanggal modifikasi, pemilik)
+- 📊 Menampilkan informasi file lengkap:
+  - Ukuran file
+  - Tanggal modifikasi terakhir
+  - Pemilik file
+  - **Lokasi folder** (path hierarchy)
 - ⚡ Auto-load semua file saat halaman dimuat
-- 🔒 Pencarian terbatas pada folder tertentu
+- 🔒 Pencarian terbatas pada folder tertentu dan subfolder-nya
 
 ## 🛠 Teknologi
 
-- Google Apps Script
-- HTML5
-- CSS3 (Responsive Design)
-- JavaScript (ES6+)
-- Google Drive API
+- **Backend**: Google Apps Script
+- **Frontend**: HTML5, CSS3, JavaScript (ES6+)
+- **API**: Google Drive API (DriveApp)
+- **Hosting**: Google Apps Script Web App
+- **Embed**: Google Sites
 
 ## 📦 Prasyarat
 
@@ -91,102 +95,150 @@ function getAllFiles() {
     const folder = DriveApp.getFolderById(FOLDER_ID);
     const results = [];
     
-    // Define all document, spreadsheet, and presentation file types
     const mimeTypes = [
-      // Google Workspace files
       MimeType.GOOGLE_DOCS,
       MimeType.GOOGLE_SHEETS,
       MimeType.GOOGLE_SLIDES,
-      // Microsoft Office files (modern)
-      MimeType.MICROSOFT_WORD,           // .docx
-      MimeType.MICROSOFT_EXCEL,          // .xlsx
-      MimeType.MICROSOFT_POWERPOINT,     // .pptx
-      // Microsoft Office files (legacy)
-      MimeType.MICROSOFT_WORD_LEGACY,    // .doc
-      MimeType.MICROSOFT_EXCEL_LEGACY,   // .xls
-      MimeType.MICROSOFT_POWERPOINT_LEGACY // .ppt
+      MimeType.MICROSOFT_WORD,
+      MimeType.MICROSOFT_EXCEL,
+      MimeType.MICROSOFT_POWERPOINT,
+      MimeType.MICROSOFT_WORD_LEGACY,
+      MimeType.MICROSOFT_EXCEL_LEGACY,
+      MimeType.MICROSOFT_POWERPOINT_LEGACY
     ];
     
-    // Get all files in folder
-    const files = folder.getFiles();
-    
-    while (files.hasNext()) {
-      const file = files.next();
-      const mimeType = file.getMimeType();
-      
-      // Only include document, spreadsheet, and presentation files
-      if (mimeTypes.includes(mimeType)) {
-        results.push({
-          name: file.getName(),
-          url: file.getUrl(),
-          type: mimeType,
-          lastModified: file.getLastUpdated().toLocaleDateString(),
-          owner: file.getOwner().getName(),
-          id: file.getId(),
-          size: formatFileSize(file.getSize())
-        });
-      }
-    }
+    // Recursively get all files from folder and subfolders
+    getFilesRecursive(folder, mimeTypes, results);
     
     // Sort by name
     results.sort((a, b) => a.name.localeCompare(b.name));
-    
     return results;
   } catch (error) {
     return [{error: error.toString()}];
   }
 }
 
+function getFilesRecursive(folder, mimeTypes, results) {
+  // Get all files in current folder
+  const files = folder.getFiles();
+  
+  while (files.hasNext()) {
+    const file = files.next();
+    const mimeType = file.getMimeType();
+    
+    if (mimeTypes.includes(mimeType)) {
+      results.push({
+        name: file.getName(),
+        url: file.getUrl(),
+        type: mimeType,
+        lastModified: file.getLastUpdated().toLocaleDateString(),
+        owner: file.getOwner().getName(),
+        id: file.getId(),
+        size: formatFileSize(file.getSize()),
+        folderPath: getFolderPath(file)
+      });
+    }
+  }
+  
+  // Recursively process all subfolders
+  const subfolders = folder.getFolders();
+  while (subfolders.hasNext()) {
+    const subfolder = subfolders.next();
+    getFilesRecursive(subfolder, mimeTypes, results);
+  }
+}
+
 function searchFiles(searchTerm) {
   try {
     if (!searchTerm || searchTerm.trim() === '') {
-      return getAllFiles(); // Return all files if search is empty
+      return getAllFiles();
     }
     
     const folder = DriveApp.getFolderById(FOLDER_ID);
     const results = [];
     
-    // Define all file types we want to search
     const mimeTypes = [
-      // Google Workspace
       MimeType.GOOGLE_DOCS,
       MimeType.GOOGLE_SHEETS,
       MimeType.GOOGLE_SLIDES,
-      // Microsoft Office (modern)
       MimeType.MICROSOFT_WORD,
       MimeType.MICROSOFT_EXCEL,
       MimeType.MICROSOFT_POWERPOINT,
-      // Microsoft Office (legacy)
       MimeType.MICROSOFT_WORD_LEGACY,
       MimeType.MICROSOFT_EXCEL_LEGACY,
       MimeType.MICROSOFT_POWERPOINT_LEGACY
     ];
     
-    // Build search query
-    const mimeQuery = mimeTypes.map(type => `mimeType = '${type}'`).join(' or ');
-    const query = `(${mimeQuery}) and fullText contains "${searchTerm}" and "${FOLDER_ID}" in parents and trashed = false`;
-    
-    const files = DriveApp.searchFiles(query);
-    
-    while (files.hasNext()) {
-      const file = files.next();
-      results.push({
-        name: file.getName(),
-        url: file.getUrl(),
-        type: file.getMimeType(),
-        lastModified: file.getLastUpdated().toLocaleDateString(),
-        owner: file.getOwner().getName(),
-        id: file.getId(),
-        size: formatFileSize(file.getSize())
-      });
-    }
+    // Search recursively in folder and all subfolders
+    searchFilesRecursive(folder, searchTerm, mimeTypes, results);
     
     // Sort by name
     results.sort((a, b) => a.name.localeCompare(b.name));
-    
     return results;
   } catch (error) {
     return [{error: error.toString()}];
+  }
+}
+
+function searchFilesRecursive(folder, searchTerm, mimeTypes, results) {
+  // Search in current folder
+  const files = folder.getFiles();
+  
+  while (files.hasNext()) {
+    const file = files.next();
+    const mimeType = file.getMimeType();
+    const fileName = file.getName().toLowerCase();
+    const searchLower = searchTerm.toLowerCase();
+    
+    // Check if file matches type and search term
+    if (mimeTypes.includes(mimeType) && fileName.indexOf(searchLower) > -1) {
+      results.push({
+        name: file.getName(),
+        url: file.getUrl(),
+        type: mimeType,
+        lastModified: file.getLastUpdated().toLocaleDateString(),
+        owner: file.getOwner().getName(),
+        id: file.getId(),
+        size: formatFileSize(file.getSize()),
+        folderPath: getFolderPath(file)
+      });
+    }
+  }
+  
+  // Search in all subfolders
+  const subfolders = folder.getFolders();
+  while (subfolders.hasNext()) {
+    const subfolder = subfolders.next();
+    searchFilesRecursive(subfolder, searchTerm, mimeTypes, results);
+  }
+}
+
+function getFolderPath(file) {
+  try {
+    const parents = file.getParents();
+    if (parents.hasNext()) {
+      const parent = parents.next();
+      const rootFolder = DriveApp.getFolderById(FOLDER_ID);
+      
+      // Build path from parent folders
+      let path = parent.getName();
+      let currentFolder = parent;
+      
+      // Stop when we reach the root folder or no more parents
+      while (currentFolder.getId() !== FOLDER_ID) {
+        const parentFolders = currentFolder.getParents();
+        if (!parentFolders.hasNext()) break;
+        currentFolder = parentFolders.next();
+        if (currentFolder.getId() !== FOLDER_ID) {
+          path = currentFolder.getName() + ' > ' + path;
+        }
+      }
+      
+      return path;
+    }
+    return 'Root';
+  } catch (e) {
+    return 'Unknown';
   }
 }
 
@@ -196,27 +248,6 @@ function formatFileSize(bytes) {
   const sizes = ['Bytes', 'KB', 'MB', 'GB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
-}
-
-function getFileTypeLabel(mimeType) {
-  // MIME type strings from Google Apps Script
-  const types = {
-    // Google Workspace
-    'application/vnd.google-apps.document': 'Google Docs',
-    'application/vnd.google-apps.spreadsheet': 'Google Sheets',
-    'application/vnd.google-apps.presentation': 'Google Slides',
-    // Microsoft Word
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'Word (.docx)',
-    'application/msword': 'Word (.doc)',
-    // Microsoft Excel
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'Excel (.xlsx)',
-    'application/vnd.ms-excel': 'Excel (.xls)',
-    // Microsoft PowerPoint
-    'application/vnd.openxmlformats-officedocument.presentationml.presentation': 'PowerPoint (.pptx)',
-    'application/vnd.ms-powerpoint': 'PowerPoint (.ppt)'
-  };
-  
-  return types[mimeType] || 'Unknown';
 }
 ```
 <img width="1024" height="944" alt="image" src="https://github.com/user-attachments/assets/fafb9520-d386-45e7-abd9-f79c64356cdf" />
@@ -700,9 +731,9 @@ function getFileTypeLabel(mimeType) {
                 </a>
                 <div class="file-info">
                   <span class="file-type ${typeClass}">${fileTypeLabel}</span>
+                  <span>📁 ${escapeHtml(file.folderPath)}</span>
                   <span>📏 ${file.size}</span>
                   <span>📅 ${file.lastModified}</span>
-                  <span>👤 ${escapeHtml(file.owner)}</span>
                 </div>
               </div>
             </div>
@@ -878,18 +909,37 @@ drive-file-browser/
 **Solusi**: 
 1. Pastikan Anda sudah memberikan izin saat deployment
 2. Re-deploy aplikasi dan authorize ulang
+3. Pastikan akun yang digunakan memiliki akses ke folder tersebut
 
 ### File Tidak Muncul
 
 **Penyebab**:
 - Folder ID salah
 - File bukan tipe yang didukung
-- File ada di subfolder (tidak terdeteksi)
+- Akses file dibatasi
 
 **Solusi**:
 1. Periksa kembali Folder ID di `Code.gs`
 2. Pastikan file adalah Google Docs/Sheets/Slides atau MS Office
-3. Pindahkan file ke folder utama (bukan subfolder)
+3. Cek permission file di Google Drive
+
+### Script Timeout (Execution time exceeded)
+
+**Penyebab**:
+- Terlalu banyak file dan subfolder (>1000 files)
+- Struktur folder terlalu dalam (>10 levels)
+
+**Solusi**:
+1. Batasi kedalaman rekursi dengan menambahkan parameter `maxDepth`
+2. Implementasi pagination
+3. Cache hasil menggunakan `PropertiesService`
+
+### Pencarian Tidak Menemukan File
+
+**Catatan**: 
+- Pencarian full-text hanya bekerja untuk **Google Docs, Sheets, dan Slides**
+- File Microsoft Office hanya bisa dicari berdasarkan **nama file**, bukan konten
+- Pastikan huruf besar/kecil sesuai (case-insensitive search)
 
 ### Embed Tidak Muncul di Google Sites
 
@@ -897,12 +947,7 @@ drive-file-browser/
 1. Pastikan deployment setting "Who has access" adalah **Anyone** atau sesuai organisasi Anda
 2. Gunakan URL yang benar (harus diakhiri dengan `/exec`)
 3. Clear cache browser dan refresh halaman
-
-### Pencarian Tidak Menemukan File
-
-**Catatan**: 
-- Pencarian full-text hanya bekerja untuk Google Docs, Sheets, dan Slides
-- File Microsoft Office hanya bisa dicari berdasarkan nama file, bukan konten
+4. Coba buka URL Web App langsung di browser untuk memastikan berfungsi
 
 ## 📱 Responsive Breakpoints
 
@@ -917,11 +962,16 @@ drive-file-browser/
 
 Dibuat dengan ❤️ untuk komunitas developer Indonesia
 
+**Satrio Waskitho**
+- GitHub: [@satriowaskitho](https://github.com/satriowaskitho)
+- Email: satriowaskitho@gmail.com
+
 ## 🙏 Acknowledgments
 
-- Google Apps Script Documentation
-- Google Drive API
-- Material Design Guidelines
+- [Google Apps Script Documentation](https://developers.google.com/apps-script)
+- [Google Drive API](https://developers.google.com/drive)
+- [Material Design Guidelines](https://material.io/design)
+- Inspirasi dari komunitas open source
 
 ***
 
