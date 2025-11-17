@@ -873,21 +873,22 @@ Ganti dengan ID folder yang ingin Anda tampilkan.
 
 ### Melihat Semua File
 
-- Saat halaman dimuat, semua file akan ditampilkan secara otomatis
+- Saat halaman dimuat, semua file dari folder utama **dan semua subfolder** akan ditampilkan secara otomatis
 - File diurutkan berdasarkan nama (A-Z)
+- Lokasi folder ditampilkan dengan ikon 📁
 
 ### Mencari File
 
 1. Ketik kata kunci di kotak pencarian
 2. Tekan **Enter** atau klik tombol **Search**
 3. Hasil akan menampilkan file yang mengandung kata kunci di:
-   - Nama file
+   - Nama file (dari folder utama dan subfolder)
    - Konten file (untuk Google Docs, Sheets, Slides)
 
 ### Membuka File
 
 - Klik pada nama file atau di mana saja pada card file
-- File akan terbuka di tab baru
+- File akan terbuka di tab baru di Google Drive
 
 ### Kembali Melihat Semua File
 
