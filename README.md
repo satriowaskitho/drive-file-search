@@ -2,7 +2,7 @@
 
 # Google Drive File Browser untuk Google Sites
 
-Aplikasi web untuk menampilkan dan mencari file Google Drive (Docs, Sheets, Slides) dan Microsoft Office (DOCX, XLSX, PPTX) dengan antarmuka yang responsif dan modern, mendukung pencarian rekursif di semua subfolder..
+Aplikasi web untuk menampilkan dan mencari file Google Drive (Docs, Sheets, Slides) dan Microsoft Office (DOCX, XLSX, PPTX) dengan antarmuka yang responsif dan modern, mendukung pencarian rekursif di semua subfolder.
 
 ## 📋 Daftar Isi
 
